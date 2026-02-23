@@ -72,14 +72,16 @@ def get_next_task():
     return pending[0]
 
 def mark_task_done(task_id, result="completed"):
-    """Mark task as done and log completion"""
+    """Mark task as done, log completion, and IMMEDIATELY trigger next cycle"""
     tasks = load_task_queue()
+    completed_task = None
     
     for task in tasks:
         if task["id"] == task_id:
             task["status"] = "completed"
             task["completed_at"] = datetime.now().isoformat()
             task["result"] = result
+            completed_task = task
             
             # Log completion
             with open(COMPLETED_LOG, 'a', encoding='utf-8') as f:
@@ -90,6 +92,25 @@ def mark_task_done(task_id, result="completed"):
     # Remove completed from queue
     tasks = [t for t in tasks if t["status"] != "completed"]
     save_task_queue(tasks)
+    
+    # IMMEDIATELY generate follow-up tasks
+    if completed_task:
+        new_tasks = generate_next_tasks_from_completed(completed_task)
+        for task_info in new_tasks:
+            add_task(task_info["type"], task_info["description"], task_info["priority"])
+        
+        # If we just completed a task and there are new tasks (or existing ones),
+        # IMMEDIATELY execute the next one (don't wait for heartbeat)
+        next_task = get_next_task()
+        if next_task:
+            print(f"[IMMEDIATE] Task completed, immediately executing next: {next_task['description'][:50]}...")
+            execute_task_immediate(next_task)
+
+def execute_task_immediate(task):
+    """Execute a task immediately without waiting"""
+    result = execute_task(task)
+    mark_task_done(task["id"], result)
+    # This will trigger the next task, creating a continuous loop
 
 def generate_next_tasks_from_completed(last_task):
     """Generate new tasks based on what was just completed"""
@@ -170,7 +191,41 @@ def should_notify_douge(task):
     
     return False
 
-def run_autonomous_loop(max_iterations=5):
+def run_continuous_loop():
+    """Run continuously until no more tasks (event-driven)"""
+    print("[CONTINUOUS LOOP] Starting event-driven execution...")
+    print("[CONTINUOUS LOOP] Will run until no more pending tasks...")
+    
+    iteration = 0
+    max_iterations = 100  # Safety limit
+    
+    while iteration < max_iterations:
+        iteration += 1
+        print(f"\n[CONTINUOUS LOOP] Iteration {iteration}")
+        
+        # Check if Douge sent message (interrupt check would go here)
+        # For now, we run until completion
+        
+        # Get next task
+        task = get_next_task()
+        
+        if not task:
+            print("[CONTINUOUS LOOP] No more pending tasks. Stopping.")
+            break
+        
+        # Execute task - this will automatically trigger next via mark_task_done
+        print(f"[CONTINUOUS LOOP] Executing: {task['description'][:60]}...")
+        result = execute_task(task)
+        
+        # Mark done and trigger next (immediate chain reaction)
+        mark_task_done(task["id"], result)
+        
+        # Small delay to prevent CPU spinning
+        import time
+        time.sleep(0.5)
+    
+    print(f"[CONTINUOUS LOOP] Completed {iteration} iterations")
+    return iteration
     """Run the autonomous execution loop"""
     print("[AUTO LOOP] Starting autonomous execution...")
     
@@ -217,18 +272,24 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='Autonomous execution system')
-    parser.add_argument('--loop', '-l', action='store_true', help='Run autonomous loop')
+    parser.add_argument('--loop', '-l', action='store_true', help='Run limited autonomous loop')
+    parser.add_argument('--continuous', '-c', action='store_true', help='Run continuous event-driven loop')
     parser.add_argument('--add', '-a', help='Add a task (description)')
     parser.add_argument('--type', '-t', default='generic', help='Task type')
     parser.add_argument('--priority', '-p', default='normal', choices=['critical', 'high', 'normal', 'low'])
     
     args = parser.parse_args()
     
-    if args.loop:
+    if args.continuous:
+        run_continuous_loop()
+    elif args.loop:
         run_autonomous_loop()
     elif args.add:
         task = add_task(args.type, args.add, args.priority)
         print(f"Added task: {task['id']}")
+        # Immediately trigger execution
+        print("Immediately starting execution...")
+        run_continuous_loop()
     else:
         # Show queue status
         tasks = load_task_queue()

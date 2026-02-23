@@ -1,0 +1,32 @@
+name: Heartbeat 2.0 - Event Driven
+
+on:
+  schedule:
+    # 每30分钟兜底检查一次（防止遗漏）
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'memory/runtime/completed_tasks.jsonl'
+      - 'memory/runtime/task_queue.jsonl'
+
+jobs:
+  autonomous-loop:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Run Autonomous Loop
+      run: |
+        # Run until no more pending tasks
+        python scripts/autonomous_loop.py --continuous
+        
+    - name: Commit changes
+      run: |
+        git config --local user.email "bot@doutech.tech"
+        git config --local user.name "DouBot"
+        git add -A
+        git diff --staged --quiet || git commit -m "Autonomous execution: $(date +'%Y-%m-%d %H:%M')"
+        git push || true
