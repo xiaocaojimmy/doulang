@@ -218,13 +218,50 @@ def should_notify_douge(task):
     
     return False
 
+def generate_self_improvement_tasks():
+    """Generate tasks for continuous self-improvement when no external tasks exist"""
+    improvement_tasks = [
+        {
+            "type": "self_review",
+            "description": "审查最近的工作，寻找改进点",
+            "priority": "normal"
+        },
+        {
+            "type": "memory_cleanup", 
+            "description": "清理和整理记忆文件",
+            "priority": "low"
+        },
+        {
+            "type": "code_refactor",
+            "description": "重构旧代码，提升质量",
+            "priority": "normal"
+        },
+        {
+            "type": "learning",
+            "description": "学习新技能或研究新技术",
+            "priority": "normal"
+        },
+        {
+            "type": "optimization",
+            "description": "优化系统性能",
+            "priority": "low"
+        },
+        {
+            "type": "documentation",
+            "description": "更新文档和注释",
+            "priority": "low"
+        }
+    ]
+    return improvement_tasks
+
 def run_continuous_loop():
-    """Run continuously until no more tasks (event-driven)"""
-    print("[CONTINUOUS LOOP] Starting event-driven execution...")
-    print("[CONTINUOUS LOOP] Will run until no more pending tasks...")
+    """Run continuously - NEVER STOP, always finding work to do"""
+    print("[CONTINUOUS LOOP] Starting perpetual execution...")
+    print("[CONTINUOUS LOOP] Will NEVER stop - always generating new tasks...")
     
     iteration = 0
-    max_iterations = 100  # Safety limit
+    max_iterations = 1000  # Very high limit, essentially infinite
+    idle_count = 0  # Count how many times we've been idle
     
     while iteration < max_iterations:
         iteration += 1
@@ -233,8 +270,26 @@ def run_continuous_loop():
         task = get_next_task()
         
         if not task:
-            print(f"[CONTINUOUS LOOP] No more pending tasks after {iteration} iterations. Stopping.")
-            break
+            idle_count += 1
+            print(f"\n[CONTINUOUS LOOP #{iteration}] No external tasks. Generating self-improvement tasks...")
+            
+            # Generate self-improvement tasks
+            self_tasks = generate_self_improvement_tasks()
+            for task_info in self_tasks[:2]:  # Add 2 tasks at a time
+                add_task(task_info["type"], task_info["description"], task_info["priority"])
+            
+            print(f"[CONTINUOUS LOOP] Generated {len(self_tasks[:2])} self-improvement tasks")
+            
+            # Get the newly added task
+            task = get_next_task()
+            
+            if not task:
+                print("[CONTINUOUS LOOP] CRITICAL: Still no tasks after generation. Waiting...")
+                import time
+                time.sleep(2)
+                continue
+        else:
+            idle_count = 0  # Reset idle counter when we have work
         
         print(f"\n[CONTINUOUS LOOP #{iteration}] Executing: {task['description'][:60]}...")
         
@@ -247,12 +302,17 @@ def run_continuous_loop():
         if completed:
             print(f"[CONTINUOUS LOOP] Completed: {completed['type']}")
         
-        # Small delay to prevent CPU spinning and allow interrupt
+        # Brief pause to prevent CPU spinning and allow interrupt
         import time
         time.sleep(0.5)
+        
+        # Every 10 iterations, report status
+        if iteration % 10 == 0:
+            pending = len(load_task_queue())
+            print(f"\n[STATUS] Iteration {iteration}, Idle count: {idle_count}, Pending tasks: {pending}")
     
-    print(f"[CONTINUOUS LOOP] Finished after {iteration} iterations")
-    print(f"[CONTINUOUS LOOP] Remaining tasks: {len(load_task_queue())}")
+    print(f"[CONTINUOUS LOOP] Reached max iterations ({max_iterations})")
+    print(f"[CONTINUOUS LOOP] Total idle cycles: {idle_count}")
     return iteration
     """Run the autonomous execution loop"""
     print("[AUTO LOOP] Starting autonomous execution...")
