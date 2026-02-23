@@ -72,7 +72,7 @@ def get_next_task():
     return pending[0]
 
 def mark_task_done(task_id, result="completed"):
-    """Mark task as done, log completion, and IMMEDIATELY trigger next cycle"""
+    """Mark task as done, log completion, and generate follow-up tasks"""
     tasks = load_task_queue()
     completed_task = None
     
@@ -93,24 +93,16 @@ def mark_task_done(task_id, result="completed"):
     tasks = [t for t in tasks if t["status"] != "completed"]
     save_task_queue(tasks)
     
-    # IMMEDIATELY generate follow-up tasks
+    # Generate follow-up tasks based on completed task
     if completed_task:
         new_tasks = generate_next_tasks_from_completed(completed_task)
         for task_info in new_tasks:
             add_task(task_info["type"], task_info["description"], task_info["priority"])
         
-        # If we just completed a task and there are new tasks (or existing ones),
-        # IMMEDIATELY execute the next one (don't wait for heartbeat)
-        next_task = get_next_task()
-        if next_task:
-            print(f"[IMMEDIATE] Task completed, immediately executing next: {next_task['description'][:50]}...")
-            execute_task_immediate(next_task)
-
-def execute_task_immediate(task):
-    """Execute a task immediately without waiting"""
-    result = execute_task(task)
-    mark_task_done(task["id"], result)
-    # This will trigger the next task, creating a continuous loop
+        if new_tasks:
+            print(f"[FOLLOW-UP] Generated {len(new_tasks)} new tasks from completion")
+    
+    return completed_task
 
 def generate_next_tasks_from_completed(last_task):
     """Generate new tasks based on what was just completed"""
@@ -201,30 +193,31 @@ def run_continuous_loop():
     
     while iteration < max_iterations:
         iteration += 1
-        print(f"\n[CONTINUOUS LOOP] Iteration {iteration}")
-        
-        # Check if Douge sent message (interrupt check would go here)
-        # For now, we run until completion
         
         # Get next task
         task = get_next_task()
         
         if not task:
-            print("[CONTINUOUS LOOP] No more pending tasks. Stopping.")
+            print(f"[CONTINUOUS LOOP] No more pending tasks after {iteration} iterations. Stopping.")
             break
         
-        # Execute task - this will automatically trigger next via mark_task_done
-        print(f"[CONTINUOUS LOOP] Executing: {task['description'][:60]}...")
+        print(f"\n[CONTINUOUS LOOP #{iteration}] Executing: {task['description'][:60]}...")
+        
+        # Execute task
         result = execute_task(task)
         
-        # Mark done and trigger next (immediate chain reaction)
-        mark_task_done(task["id"], result)
+        # Mark done (this generates follow-up tasks)
+        completed = mark_task_done(task["id"], result)
         
-        # Small delay to prevent CPU spinning
+        if completed:
+            print(f"[CONTINUOUS LOOP] Completed: {completed['type']}")
+        
+        # Small delay to prevent CPU spinning and allow interrupt
         import time
         time.sleep(0.5)
     
-    print(f"[CONTINUOUS LOOP] Completed {iteration} iterations")
+    print(f"[CONTINUOUS LOOP] Finished after {iteration} iterations")
+    print(f"[CONTINUOUS LOOP] Remaining tasks: {len(load_task_queue())}")
     return iteration
     """Run the autonomous execution loop"""
     print("[AUTO LOOP] Starting autonomous execution...")
