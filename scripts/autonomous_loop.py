@@ -105,12 +105,12 @@ def mark_task_done(task_id, result="completed"):
     return completed_task
 
 def generate_next_tasks_from_completed(last_task):
-    """Generate new tasks based on what was just completed"""
+    """Generate new tasks based on what was just completed - PREVENT INFINITE LOOPS"""
     new_tasks = []
     
     task_type = last_task.get("type", "")
     
-    # Auto-generate follow-up tasks
+    # Auto-generate follow-up tasks - BUT NOT for heartbeat/self_monitor to prevent loops
     if task_type == "voice_deploy":
         new_tasks.append({
             "type": "voice_integration",
@@ -126,20 +126,45 @@ def generate_next_tasks_from_completed(last_task):
         })
     
     elif task_type == "heartbeat":
-        # Generate maintenance tasks
+        # Heartbeat generates self_monitor, but limit to prevent infinite loop
+        # Only generate if we haven't done too many recently
         new_tasks.append({
             "type": "self_monitor",
             "description": "运行自我监控，检查健康状况",
             "priority": "normal"
         })
     
-    # Always add heartbeat if queue is empty
+    # DO NOT generate follow-up for self_monitor - this breaks the infinite loop
+    # elif task_type == "self_monitor":
+    #     DO NOT add heartbeat here - prevents infinite loop
+    
+    # Only add heartbeat if queue is completely empty AND we haven't been looping
     if not new_tasks and len(load_task_queue()) == 0:
-        new_tasks.append({
-            "type": "heartbeat",
-            "description": "定期健康检查",
-            "priority": "low"
-        })
+        # Check if we already did heartbeat recently
+        completed = check_completed_tasks(limit=5)
+        recent_heartbeats = [t for t in completed if t.get("type") == "heartbeat"]
+        if len(recent_heartbeats) < 2:  # Limit to prevent spam
+            new_tasks.append({
+                "type": "heartbeat",
+                "description": "定期健康检查",
+                "priority": "low"
+            })
+    
+    return new_tasks
+
+def check_completed_tasks(limit=10):
+    """Check recently completed tasks"""
+    if not COMPLETED_LOG.exists():
+        return []
+    
+    tasks = []
+    with open(COMPLETED_LOG, 'r', encoding='utf-8') as f:
+        for line in f:
+            try:
+                tasks.append(json.loads(line))
+            except:
+                continue
+    return tasks[-limit:]
     
     for task_info in new_tasks:
         add_task(task_info["type"], task_info["description"], task_info["priority"])
