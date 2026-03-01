@@ -1,0 +1,312 @@
+{
+  "version": "1.0",
+  "project": "DouLang Twitter Promo Images",
+  "dimensions": {
+    "twitter_post": "1200x675",
+    "twitter_card": "1200x628"
+  },
+  "images": [
+    {
+      "id": "image_1_comparison",
+      "name": "Before-After Comparison",
+      "size": "1200x675",
+      "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "layout": "split-screen",
+      "elements": [
+        {
+          "type": "text",
+          "content": "NORMAL AI",
+          "position": "top-left",
+          "font": "Bold, 24px, White",
+          "x": 50,
+          "y": 40
+        },
+        {
+          "type": "chat-bubble",
+          "user": "What do I do?",
+          "ai": "What's your profession?",
+          "position": "left",
+          "x": 50,
+          "y": 150,
+          "color": "#ff6b6b",
+          "icon": "❌"
+        },
+        {
+          "type": "divider",
+          "style": "vertical-line",
+          "color": "rgba(255,255,255,0.3)",
+          "x": 600
+        },
+        {
+          "type": "text",
+          "content": "DOULANG AI",
+          "position": "top-right",
+          "font": "Bold, 24px, White",
+          "x": 650,
+          "y": 40
+        },
+        {
+          "type": "chat-bubble",
+          "user": "What do I do?",
+          "ai": "You're a sci-fi author! How's the AI story?",
+          "position": "right",
+          "x": 650,
+          "y": 150,
+          "color": "#51cf66",
+          "icon": "✅"
+        },
+        {
+          "type": "text",
+          "content": "Not magic. Science. | 7 experiments validated",
+          "position": "bottom-center",
+          "font": "18px, White, opacity 0.9",
+          "x": 600,
+          "y": 620
+        }
+      ]
+    },
+    {
+      "id": "image_2_architecture",
+      "name": "System Architecture",
+      "size": "1200x675",
+      "background": "#1a1a2e",
+      "elements": [
+        {
+          "type": "title",
+          "content": "How DouLang Works",
+          "font": "Bold, 32px, White",
+          "x": 600,
+          "y": 50
+        },
+        {
+          "type": "box",
+          "content": "User Input",
+          "style": "rounded, purple-gradient",
+          "x": 600,
+          "y": 120
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "color": "#667eea",
+          "x": 600,
+          "y": 180
+        },
+        {
+          "type": "box",
+          "content": "Type Detection\n+ Ethics Guard",
+          "style": "rounded, dark",
+          "x": 600,
+          "y": 220
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "color": "#667eea",
+          "x": 600,
+          "y": 300
+        },
+        {
+          "type": "box",
+          "content": "External Storage\n(Identity > Preference > Fact)",
+          "style": "rounded, dark",
+          "x": 600,
+          "y": 340
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "color": "#667eea",
+          "x": 600,
+          "y": 420
+        },
+        {
+          "type": "box",
+          "content": "Camouflage Injection\n[Chat Context: User mentioned...]",
+          "style": "rounded, highlight",
+          "x": 600,
+          "y": 460
+        },
+        {
+          "type": "arrow",
+          "direction": "down",
+          "color": "#667eea",
+          "x": 600,
+          "y": 540
+        },
+        {
+          "type": "box",
+          "content": "AI Response",
+          "style": "rounded, purple-gradient",
+          "x": 600,
+          "y": 580
+        },
+        {
+          "type": "badge",
+          "content": "⏰ 20-turn threshold",
+          "position": "bottom-left",
+          "x": 100,
+          "y": 620
+        },
+        {
+          "type": "badge",
+          "content": "🎭 Camouflage",
+          "position": "bottom-center",
+          "x": 400,
+          "y": 620
+        },
+        {
+          "type": "badge",
+          "content": "🛡️ Ethics Guard",
+          "position": "bottom-right",
+          "x": 700,
+          "y": 620
+        }
+      ]
+    },
+    {
+      "id": "image_3_code",
+      "name": "Code Example",
+      "size": "1200x675",
+      "background": "#2d2d2d",
+      "elements": [
+        {
+          "type": "code-block",
+          "language": "python",
+          "content": "from doulang import DouLangEnhanced\n\ndl = DouLangEnhanced()\n\n# Store memory\ndl.chat_with_memory(\"I'm a sci-fi author\")\n\n# 20 turns later... still remembers!\nresult = dl.chat_with_memory(\"What do I do?\")\nprint(result)  # You're a sci-fi author!",
+          "font": "Monaco/Menlo, 20px",
+          "syntax-highlight": true,
+          "x": 100,
+          "y": 100
+        },
+        {
+          "type": "text",
+          "content": "5 lines of code. AI that truly remembers.",
+          "font": "24px, White, Bold",
+          "x": 100,
+          "y": 550
+        },
+        {
+          "type": "badge",
+          "content": "🧠 DouLang",
+          "style": "purple",
+          "x": 1000,
+          "y": 50
+        }
+      ]
+    },
+    {
+      "id": "image_4_experiments",
+      "name": "7 Experiments Results",
+      "size": "1200x675",
+      "background": "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+      "elements": [
+        {
+          "type": "title",
+          "content": "Scientifically Validated",
+          "font": "Bold, 36px, #333",
+          "x": 600,
+          "y": 50
+        },
+        {
+          "type": "subtitle",
+          "content": "Every feature backed by experiments",
+          "font": "20px, #666",
+          "x": 600,
+          "y": 90
+        },
+        {
+          "type": "experiment-cards",
+          "layout": "grid-3x3",
+          "cards": [
+            {"id": "#0", "title": "Value System", "result": "✅ Validated", "desc": "Identity > Preference > Fact"},
+            {"id": "#1a", "title": "Know But Don't Do", "result": "❌ Falsified", "desc": "Models won't actively use info"},
+            {"id": "#2", "title": "External Injection", "result": "✅ Validated", "desc": "Forcing works but unnatural"},
+            {"id": "#3", "title": "Camouflage", "result": "✅ 4/5 Score", "desc": "Naturalness wins over direct"},
+            {"id": "#4b", "title": "7-Turn Threshold", "result": "📊 Measured", "desc": "Precise adhesion window"},
+            {"id": "#5", "title": "Ethics Guard", "result": "⚠️ Discovered", "desc": "Prevent hallucination"},
+            {"id": "#6", "title": "Multi-Identity", "result": "✅ Validated", "desc": "Handle complex identities"},
+            {"id": "#7", "title": "Auto-Cleanup", "result": "✅ Working", "desc": "Storage limits enforced"}
+          ],
+          "x": 100,
+          "y": 150
+        },
+        {
+          "type": "cta",
+          "content": "github.com/xiaocaojimmy/doulang",
+          "style": "button, purple",
+          "x": 600,
+          "y": 620
+        }
+      ]
+    },
+    {
+      "id": "image_5_logo",
+      "name": "DouLang Brand Card",
+      "size": "1200x675",
+      "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "elements": [
+        {
+          "type": "logo",
+          "content": "🧠",
+          "size": "80px",
+          "x": 600,
+          "y": 200
+        },
+        {
+          "type": "brand-name",
+          "content": "DouLang",
+          "font": "Bold, 72px, White",
+          "x": 600,
+          "y": 320
+        },
+        {
+          "type": "tagline",
+          "content": "AI Memory That Actually Works",
+          "font": "28px, White, opacity 0.9",
+          "x": 600,
+          "y": 380
+        },
+        {
+          "type": "features",
+          "content": "🎯 Smart Priority  ⏰ Time-Aware  🎭 Natural  🛡️ Honest",
+          "font": "18px, White",
+          "x": 600,
+          "y": 480
+        },
+        {
+          "type": "url",
+          "content": "github.com/xiaocaojimmy/doulang",
+          "font": "20px, White, underline",
+          "x": 600,
+          "y": 580
+        }
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "Canva",
+      "url": "https://canva.com",
+      "templates": "Social Media > Twitter Post"
+    },
+    {
+      "name": "Figma",
+      "url": "https://figma.com",
+      "plugins": ["Unsplash", "Iconify"]
+    },
+    {
+      "name": "Excalidraw",
+      "url": "https://excalidraw.com",
+      "use": "For architecture diagrams"
+    }
+  ],
+  "color_palette": {
+    "primary": "#667eea",
+    "secondary": "#764ba2",
+    "success": "#51cf66",
+    "error": "#ff6b6b",
+    "dark": "#1a1a2e",
+    "light": "#f5f7fa"
+  }
+}

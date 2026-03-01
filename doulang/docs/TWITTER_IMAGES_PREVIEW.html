@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DouLang Twitter Images - Design Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+        }
+        
+        .image-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .image-card h3 {
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .preview {
+            width: 100%;
+            aspect-ratio: 1200/675;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Image 1: Comparison */
+        .preview-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+        }
+        
+        .preview-1 .side {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .preview-1 .side-left {
+            border-right: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .preview-1 .side-title {
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        .preview-1 .chat-bubble {
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        
+        .preview-1 .chat-bubble.ai {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .preview-1 .chat-bubble.ai-good {
+            background: #51cf66;
+            color: white;
+        }
+        
+        .preview-1 .label {
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .preview-1 .bottom-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Image 2: Architecture */
+        .preview-2 {
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            gap: 10px;
+        }
+        
+        .preview-2 .flow-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .preview-2 .flow-item.dark {
+            background: #2d2d44;
+        }
+        
+        .preview-2 .arrow {
+            color: #667eea;
+            font-size: 20px;
+        }
+        
+        .preview-2 .badges {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .preview-2 .badge {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+        }
+        
+        /* Image 3: Code */
+        .preview-3 {
+            background: #2d2d2d;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .preview-3 .code-block {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .preview-3 .keyword { color: #66d9ef; }
+        .preview-3 .string { color: #a6e22e; }
+        .preview-3 .comment { color: #75715e; }
+        .preview-3 .function { color: #a6e22e; }
+        
+        .preview-3 .caption {
+            color: white;
+            font-size: 20px;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+        
+        /* Image 4: Experiments */
+        .preview-4 {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+        }
+        
+        .preview-4 .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .preview-4 .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-4 .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .preview-4 .card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-top: 3px solid #667eea;
+        }
+        
+        .preview-4 .card-id {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .preview-4 .card-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+        }
+        
+        .preview-4 .card-result {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .preview-4 .result-success { background: #d4edda; color: #155724; }
+        .preview-4 .result-fail { background: #f8d7da; color: #721c24; }
+        .preview-4 .result-data { background: #fff3cd; color: #856404; }
+        
+        .preview-4 .cta {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .preview-4 .cta-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        /* Image 5: Logo */
+        .preview-5 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .preview-5 .logo-icon {
+            font-size: 80px;
+        }
+        
+        .preview-5 .brand {
+            font-size: 60px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .preview-5 .tagline {
+            font-size: 24px;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .preview-5 .features {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .preview-5 .feature {
+            color: white;
+            font-size: 14px;
+        }
+        
+        .preview-5 .url {
+            color: white;
+            font-size: 18px;
+            margin-top: 30px;
+            text-decoration: underline;
+        }
+        
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+        
+        .instructions h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #666;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        @media print {
+            .instructions { display: none; }
+            .image-card { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 DouLang Twitter Images</h1>
+        <p class="subtitle">Design Preview - Take screenshots or use as reference</p>
+        
+        <div class="image-grid">
+            <!-- Image 1: Comparison -->
+            <div class="image-card">
+                <h3>Image 1: Before/After Comparison</h3>
+                <div class="preview preview-1">
+                    <div class="side side-left">
+                        <div class="side-title">NORMAL AI</div>
+                        <div class="chat-bubble">What do I do?</div>
+                        <div class="chat-bubble ai">What's your profession?</div>
+                        <div class="label">❌ Forgot after 20 turns</div>
+                    </div>
+                    <div class="side side-right">
+                        <div class="side-title">DOULANG AI</div>
+                        <div class="chat-bubble">What do I do?</div>
+                        <div class="chat-bubble ai-good">You're a sci-fi author! How's the AI story?</div>
+                        <div class="label">✅ Still remembers</div>
+                    </div>
+                    <div class="bottom-text">Not magic. Science. | 7 experiments validated</div>
+                </div>
+            </div>
+            
+            <!-- Image 2: Architecture -->
+            <div class="image-card">
+                <h3>Image 2: System Architecture</h3>
+                <div class="preview preview-2">
+                    <div class="flow-item">User Input</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item dark">Type Detection + Ethics Guard</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item dark">External Storage</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item dark">Camouflage Injection</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-item">AI Response</div>
+                    
+                    <div class="badges">
+                        <div class="badge">⏰ 20-turn threshold</div>
+                        <div class="badge">🎭 Camouflage</div>
+                        <div class="badge">🛡️ Ethics Guard</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image 3: Code -->
+            <div class="image-card">
+                <h3>Image 3: Code Example</h3>
+                <div class="preview preview-3">
+                    <div class="code-block">
+                        <span class="keyword">from</span> doulang <span class="keyword">import</span> DouLangEnhanced<br><br>
+                        dl = <span class="function">DouLangEnhanced</span>()<br><br>
+                        <span class="comment"># Store memory</span><br>
+                        dl.<span class="function">chat_with_memory</span>(<span class="string">"I'm a sci-fi author"</span>)<br><br>
+                        <span class="comment"># 20 turns later... still remembers!</span><br>
+                        result = dl.<span class="function">chat_with_memory</span>(<span class="string">"What do I do?"</span>)<br>
+                        <span class="function">print</span>(result)  <span class="comment"># You're a sci-fi author!</span>
+                    </div>
+                    <div class="caption">5 lines of code. AI that truly remembers.</div>
+                </div>
+            </div>
+            
+            <!-- Image 4: Experiments -->
+            <div class="image-card">
+                <h3>Image 4: 7 Experiments Results</h3>
+                <div class="preview preview-4">
+                    <div class="title">Scientifically Validated</div>
+                    <div class="subtitle">Every feature backed by experiments</div>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <div class="card-id">#0</div>
+                            <div class="card-title">Value System</div>
+                            <div class="card-result result-success">✅ Validated</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#1a</div>
+                            <div class="card-title">Know But Don't Do</div>
+                            <div class="card-result result-fail">❌ Falsified</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#2</div>
+                            <div class="card-title">External Injection</div>
+                            <div class="card-result result-success">✅ Validated</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#3</div>
+                            <div class="card-title">Camouflage 4/5</div>
+                            <div class="card-result result-success">✅ Validated</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#4b</div>
+                            <div class="card-title">7-Turn Threshold</div>
+                            <div class="card-result result-data">📊 Measured</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#5</div>
+                            <div class="card-title">Ethics Guard</div>
+                            <div class="card-result result-data">⚠️ Discovered</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#6</div>
+                            <div class="card-title">Multi-Identity</div>
+                            <div class="card-result result-success">✅ Validated</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-id">#7</div>
+                            <div class="card-title">Auto-Cleanup</div>
+                            <div class="card-result result-success">✅ Validated</div>
+                        </div>
+                    </div>
+                    
+                    <div class="cta">
+                        <a href="#" class="cta-btn">github.com/xiaocaojimmy/doulang</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image 5: Logo -->
+            <div class="image-card">
+                <h3>Image 5: Brand Card</h3>
+                <div class="preview preview-5">
+                    <div class="logo-icon">🧠</div>
+                    <div class="brand">DouLang</div>
+                    <div class="tagline">AI Memory That Actually Works</div>
+                    
+                    <div class="features">
+                        <div class="feature">🎯 Smart Priority</div>
+                        <div class="feature">⏰ Time-Aware</div>
+                        <div class="feature">🎭 Natural</div>
+                        <div class="feature">🛡️ Honest</div>
+                    </div>
+                    
+                    <div class="url">github.com/xiaocaojimmy/doulang</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>How to Use These Designs</h2>
+            <ol>
+                <li><strong>Screenshot:</strong> Press F12 to open dev tools, then Ctrl+Shift+P &gt; "Capture full size screenshot" (Chrome)</li>
+                <li><strong>Print to PDF:</strong> Ctrl+P, select "Save as PDF", set paper size to custom 1200x675</li>
+                <li><strong>Canva:</strong> Use these as reference to recreate in Canva with exact colors and layout</li>
+                <li><strong>Figma:</strong> Import this HTML or use the design specs in IMAGE_DESIGNS.json</li>
+            </ol>
+            
+            <p><strong>Color Palette:</strong> Primary #667eea, Secondary #764ba2, Success #51cf66, Error #ff6b6b</p>
+            <p><strong>Font:</strong> System fonts (-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto)</p>
+            <p><strong>Twitter Dimensions:</strong> 1200x675 pixels for optimal display</p>
+        </div>
+    </div>
+</body>
+</html>
