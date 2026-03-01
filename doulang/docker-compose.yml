@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  doulang:
+    build: .
+    container_name: doulang-memory
+    volumes:
+      - ./data:/app/data
+      - ./memory:/app/memory
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - DOULANG_DATA_DIR=/app/data
+    ports:
+      - "8080:8080"
+    networks:
+      - doulang-net
+    restart: unless-stopped
+    command: python -m doulang.server
+
+  # 可选: Web界面
+  doulang-web:
+    build: ./web
+    container_name: doulang-web
+    ports:
+      - "3000:3000"
+    environment:
+      - DOULANG_API=http://doulang:8080
+    depends_on:
+      - doulang
+    networks:
+      - doulang-net
+    restart: unless-stopped
+
+networks:
+  doulang-net:
+    driver: bridge
+
+volumes:
+  doulang-data:
